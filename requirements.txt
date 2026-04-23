@@ -1,0 +1,8 @@
+# requirements.txt
+fastapi
+uvicorn          # the server that runs FastAPI
+streamlit
+requests
+python-dotenv    # reads your .env file
+pydantic         # data validation (comes with FastAPI)
+openai
