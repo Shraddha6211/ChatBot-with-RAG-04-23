@@ -26,4 +26,34 @@ async def upload_document(file: UploadFile = File(...)):
     5. Save all chunks to SQLite
     """
 
+    # Step 1 & 2: Read and decode
+    # 'await' is needed here because reading bytes from an uploaded file is an asyn I/O operation in FastAPI
+    try:
+        contents = await file.read()
+        text = contents.decode("utf-8")
+    except UnicodeDecodeError:
+        # The file wasn't valid UTF-8 text (might be a binary PDF)
+        raise HTTPException(
+            status_code=400,
+            detail= "File must be a plain text (.txt) file encoded in UTF-8."
+                    "For PDFs, convert to text first."
+        )
+    if not text.strip():
+        raise HTTPException(status_code=400, detail="Uploaded file is empty.")
     
+    # Step 3: Split into chunks
+    chunks = split_into_chunks(text)
+
+    # Step 4 & 5: Save the document record, then each chunk + its embedding
+    doc_id = save_document(file.filename)
+
+    for chunk_text in chunks:
+        embedding = get_embedding(chunk_text)
+        embedding_str = serialize_embedding(embedding)
+        save_chunk(doc_id, chunk_text, embedding_str)
+
+    return UploadResponse(
+        success= True,
+        filename=file.filename,
+        chunks_stored=len(chunks)
+    )
