@@ -45,3 +45,23 @@ class HistoryResponse(BaseModel):
     }
     """
     history: list[HistoryMessage]
+
+### New: Upload models
+
+class UploadResponse(BaseModel):
+    """
+    Returned after a document is uploaded and processed.
+
+    Example response:
+    {
+        "success": true,
+        "filename": "company_policy.pdf",
+        "chunks_stored": 14
+    }
+
+    chunks_stored tells you how many pieces the document was split into.
+    Useful for debugging -if you upload a 50-page PDF and get 2 chunks, somenthing went wrong with parsing.
+    """
+    success: bool
+    filename: str
+    chunks_stored: int
