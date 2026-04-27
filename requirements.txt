@@ -6,3 +6,4 @@ requests
 python-dotenv    # reads your .env file
 pydantic         # data validation (comes with FastAPI)
 openai
+python-multipart

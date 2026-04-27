@@ -6,6 +6,7 @@ from backend.database import create_tables
 # Import all three routers
 from backend.routes.chat import router as chat_router
 from backend.routes.history import router as history_router
+from backend.routes.upload import router as upload_router
 
 # Create the FastAPI application instance
 app = FastAPI(
@@ -26,8 +27,9 @@ def startup():
 # app.include_router(register_router, tags=["Registration"])
 app.include_router(chat_router, tags=["Chat"])
 app.include_router(history_router, tags=["History"])
+app.include_router(upload_router, tags=["Documents"])
 
 # A simple health check so you can confirm the server is running
 @app.get("/")
 def root():
-    return {"status": "API is running"}
+    return {"status": "RAG Chatbot API is running"}
